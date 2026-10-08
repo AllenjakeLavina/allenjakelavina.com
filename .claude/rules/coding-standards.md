@@ -33,7 +33,8 @@ Clean + understandable + maintainable. Not complex + over-abstracted. If you're 
 ## HTML & CSS
 
 - Use semantic HTML elements (`<nav>`, `<main>`, `<section>`, `<button>`, `<a>`) over generic `<div>`/`<span>` with click handlers.
-- Keep CSS maintainable: prefer CSS custom properties (tokens) already defined in `src/index.css`/`src/styles/` over new one-off hex values; keep selectors scoped to the component/section they style.
+- Use Tailwind utility classes for normal component/layout styling — it's the project's primary styling system. See [ui-ux.md](ui-ux.md#styling-tailwind-css) for the detailed Tailwind conventions (when to extract a component, when a plain CSS file is still appropriate, arbitrary-value policy).
+- Prefer the CSS custom properties (tokens) already defined in `src/index.css` over new one-off hex values when writing plain CSS.
 
 ## Formatting
 

@@ -8,10 +8,10 @@ A personal portfolio / profile website for **Allen Jake Lavina**. It is a standa
 
 ## Current stack (do not replace)
 
-React + TypeScript + Vite + pnpm + ESLint. See [package.json](package.json) for exact versions and scripts.
+React + TypeScript + Vite + pnpm + ESLint, styled with **Tailwind CSS v4** (via `@tailwindcss/vite`) as the project's primary styling system. See [package.json](package.json) for exact versions and scripts.
 
-- Do not swap out Vite, React, TypeScript, or pnpm.
-- Do not introduce a new framework, UI library, or state-management library without explicit user approval and clear justification.
+- Do not swap out Vite, React, TypeScript, pnpm, or Tailwind CSS.
+- Do not introduce a new framework, another CSS framework, a UI component library, an animation library, or a state-management library without explicit user approval and clear justification.
 - Do not add dependencies speculatively. See [.claude/rules/architecture.md](.claude/rules/architecture.md#dependency-policy).
 
 ## How to work on this repo
@@ -42,8 +42,8 @@ Slash-command workflows for this loop: [/audit](.claude/commands/audit.md) → [
 | When to write OpenSpec docs, author field, content accuracy | [documentation.md](.claude/rules/documentation.md) |
 | Branching, commits, what Claude may/may not do with git | [git-workflow.md](.claude/rules/git-workflow.md) |
 | What checks to run and when, honest reporting of failures | [testing.md](.claude/rules/testing.md) |
-| Accessibility, responsiveness, motion, UI libraries | [ui-ux.md](.claude/rules/ui-ux.md) |
+| Accessibility, responsiveness, motion, Tailwind usage, UI libraries | [ui-ux.md](.claude/rules/ui-ux.md) |
 
 ## Project status
 
-As of 2026-10-08, this is the unmodified Vite + React + TypeScript starter template plus a swapped-in hero image. No portfolio sections (Hero/About/Skills/Projects/Contact) exist yet. No test framework is installed. This file and the `.claude/` rules establish governance *before* that implementation work begins — do not build portfolio UI based on this file alone; wait for explicit feature requests.
+As of 2026-10-08, Tailwind CSS v4 is installed and wired into Vite (`vite.config.ts` + `@import 'tailwindcss';` in `src/index.css`), replacing nothing else in the starter template — the app itself is still the unmodified Vite + React + TypeScript starter plus a swapped-in hero image. No portfolio sections (Hero/About/Skills/Projects/Contact) exist yet, and no animation has been implemented or installed. No test framework is installed. This file and the `.claude/` rules establish governance *before* that implementation work begins — do not build portfolio UI or add animation based on this file alone; wait for an approved OpenSpec change and explicit feature requests.

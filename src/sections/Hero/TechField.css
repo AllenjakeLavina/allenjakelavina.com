@@ -1,0 +1,157 @@
+/*
+ * Multi-trajectory technology field (replaces the earlier single shared
+ * orbit). One `@keyframes` definition is still shared by every item — no
+ * duplication — but each item now drives it with its OWN center offset,
+ * ellipse size, duration, phase, scale/brightness range and depth mode via
+ * inline custom properties (src/data/heroField.ts), so the field reads as
+ * scattered, independently-moving trajectories instead of one visible circle.
+ *
+ * Depth (design.md § 9's mechanism, generalized): the path still has 12
+ * waypoints every 8.333% tracing an ellipse around (centerX, centerY). Two
+ * custom properties — --z-a (the "upper half" of the loop) and --z-b (the
+ * "lower half") — carry the z-index for each half. For `depthMode: crossing`
+ * items, --z-a/--z-b differ (5 vs 15) so the item dynamically swaps between
+ * behind and in front of the portrait, using the same `steps(1)` hard-cut
+ * technique as before. For `back`/`front` items, --z-a and --z-b are equal,
+ * so they stay at a single fixed depth for their whole loop (still with
+ * living scale/brightness motion) — this is what gives the field a genuine
+ * mix of background, foreground, and crossing items instead of everything
+ * sitting at one layer.
+ */
+
+.tech-field {
+  position: absolute;
+  inset: 0;
+  container-type: size;
+  pointer-events: none;
+}
+
+.tech-field__item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--item-size, 32px);
+  height: var(--item-size, 32px);
+  margin: calc(var(--item-size, 32px) / -2) 0 0 calc(var(--item-size, 32px) / -2);
+  animation: tech-field-orbit var(--duration) linear infinite;
+  animation-delay: calc(var(--duration) * var(--phase) * -1);
+  will-change: translate, scale;
+}
+
+@media (min-width: 768px) {
+  .tech-field__item {
+    --item-size: 40px;
+  }
+}
+
+.tech-field__item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes tech-field-orbit {
+  0% {
+    translate: var(--center-x) calc(var(--center-y) - var(--radius-y));
+    scale: var(--scale-back);
+    filter: brightness(var(--brightness-back));
+    z-index: var(--z-a);
+  }
+  8.333% {
+    translate: calc(var(--center-x) + var(--radius-x) * 0.5) calc(var(--center-y) - var(--radius-y) * 0.866);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2 - (var(--scale-front) - var(--scale-back)) * 0.33);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2 - (var(--brightness-front) - var(--brightness-back)) * 0.3));
+  }
+  16.667% {
+    translate: calc(var(--center-x) + var(--radius-x) * 0.866) calc(var(--center-y) - var(--radius-y) * 0.5);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2 - (var(--scale-front) - var(--scale-back)) * 0.1);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2 - (var(--brightness-front) - var(--brightness-back)) * 0.1));
+  }
+  24.9% {
+    translate: calc(var(--center-x) + var(--radius-x) * 0.999) calc(var(--center-y) - var(--radius-y) * 0.02);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2 + (var(--scale-front) - var(--scale-back)) * 0.08);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2 + (var(--brightness-front) - var(--brightness-back)) * 0.08));
+    z-index: var(--z-a);
+    animation-timing-function: steps(1);
+  }
+  25% {
+    translate: calc(var(--center-x) + var(--radius-x)) var(--center-y);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2));
+    z-index: var(--z-b);
+  }
+  33.333% {
+    translate: calc(var(--center-x) + var(--radius-x) * 0.866) calc(var(--center-y) + var(--radius-y) * 0.5);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2 + (var(--scale-front) - var(--scale-back)) * 0.18);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2 + (var(--brightness-front) - var(--brightness-back)) * 0.16));
+  }
+  41.667% {
+    translate: calc(var(--center-x) + var(--radius-x) * 0.5) calc(var(--center-y) + var(--radius-y) * 0.866);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2 + (var(--scale-front) - var(--scale-back)) * 0.33);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2 + (var(--brightness-front) - var(--brightness-back)) * 0.28));
+  }
+  50% {
+    translate: var(--center-x) calc(var(--center-y) + var(--radius-y));
+    scale: var(--scale-front);
+    filter: brightness(var(--brightness-front));
+    z-index: var(--z-b);
+  }
+  58.333% {
+    translate: calc(var(--center-x) - var(--radius-x) * 0.5) calc(var(--center-y) + var(--radius-y) * 0.866);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2 + (var(--scale-front) - var(--scale-back)) * 0.33);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2 + (var(--brightness-front) - var(--brightness-back)) * 0.28));
+  }
+  66.667% {
+    translate: calc(var(--center-x) - var(--radius-x) * 0.866) calc(var(--center-y) + var(--radius-y) * 0.5);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2 + (var(--scale-front) - var(--scale-back)) * 0.18);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2 + (var(--brightness-front) - var(--brightness-back)) * 0.16));
+  }
+  74.9% {
+    translate: calc(var(--center-x) - var(--radius-x) * 0.999) calc(var(--center-y) + var(--radius-y) * 0.02);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2 + (var(--scale-front) - var(--scale-back)) * 0.08);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2 + (var(--brightness-front) - var(--brightness-back)) * 0.08));
+    z-index: var(--z-b);
+    animation-timing-function: steps(1);
+  }
+  75% {
+    translate: calc(var(--center-x) - var(--radius-x)) var(--center-y);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2));
+    z-index: var(--z-a);
+  }
+  83.333% {
+    translate: calc(var(--center-x) - var(--radius-x) * 0.866) calc(var(--center-y) - var(--radius-y) * 0.5);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2 - (var(--scale-front) - var(--scale-back)) * 0.1);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2 - (var(--brightness-front) - var(--brightness-back)) * 0.1));
+  }
+  91.667% {
+    translate: calc(var(--center-x) - var(--radius-x) * 0.5) calc(var(--center-y) - var(--radius-y) * 0.866);
+    scale: calc((var(--scale-back) + var(--scale-front)) / 2 - (var(--scale-front) - var(--scale-back)) * 0.33);
+    filter: brightness(calc((var(--brightness-back) + var(--brightness-front)) / 2 - (var(--brightness-front) - var(--brightness-back)) * 0.3));
+  }
+  100% {
+    translate: var(--center-x) calc(var(--center-y) - var(--radius-y));
+    scale: var(--scale-back);
+    filter: brightness(var(--brightness-back));
+    z-index: var(--z-a);
+  }
+}
+
+/*
+ * Reduced motion (design.md § 14, carried over): every item stops moving and
+ * is placed at a fixed point on its OWN ellipse (not one shared ring), still
+ * using its own center/radius, all rendered at "front" depth so nothing
+ * disappears behind the portrait when motion is off.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .tech-field__item {
+    animation: none;
+    translate: 0 0;
+    offset-path: ellipse(var(--radius-x) var(--radius-y) at calc(50% + var(--center-x)) calc(50% + var(--center-y)));
+    offset-distance: calc(100% * var(--phase));
+    offset-rotate: 0deg;
+    scale: var(--scale-front);
+    filter: brightness(var(--brightness-front));
+    z-index: 15;
+  }
+}

@@ -14,7 +14,7 @@ src/
 ├── lib/         framework-independent utilities and helpers (pure functions)
 ├── pages/       route-level components (used once React Router or similar is introduced)
 ├── sections/    major portfolio sections: Hero, About, Skills, Experience, Projects, Contact
-├── styles/      global/shared CSS (tokens, resets, shared utility classes)
+├── styles/      global CSS that isn't Tailwind utilities (design tokens, resets, complex custom animation) — currently just `src/index.css`; don't add a `styles/tailwind/` or similar Tailwind-specific subfolder
 ├── types/       shared TypeScript types/interfaces used across more than one file
 ├── App.tsx
 └── main.tsx
@@ -46,4 +46,6 @@ Before adding any dependency:
 3. Weigh bundle size and ongoing maintenance cost against the benefit.
 4. State the justification explicitly when proposing the addition — "it's popular" is not a justification.
 
-Do not install UI component libraries, animation libraries, CSS frameworks, or state-management libraries without explicit user approval, even if they'd be convenient.
+**Tailwind CSS (`tailwindcss`, `@tailwindcss/vite`) is already approved and installed** as the project's primary styling system — see [ui-ux.md](ui-ux.md#styling-tailwind-css) for usage rules. It does not need re-justification.
+
+Do not install UI component libraries, animation libraries, another CSS framework, or state-management libraries without explicit user approval, even if they'd be convenient.
